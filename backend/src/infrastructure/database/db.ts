@@ -1,5 +1,6 @@
 import { Pool } from "pg";
 import config from "../../config/config.js";
+import { logger } from "../logger/logger.js";
 
 export const db = new Pool({
   host: config.database.host,
@@ -12,9 +13,9 @@ export const db = new Pool({
 export const connectDB = async () => {
   try {
     await db.query(`SELECT 1`);
-    console.log("Connected to the database");
+    logger.info("Connected to the database");
   } catch (error) {
-    console.error("Database connection error", error);
+    logger.error("Database connection error", error);
     process.exit(1);
   }
 };
