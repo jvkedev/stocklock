@@ -1,6 +1,10 @@
 import argon2 from "argon2";
+import ms from "ms";
 import { AppError } from "../../shared/errors/AppError.js";
 import { createNewUser, getUserByEmail } from "../users/user.service.js";
+import { generateAccessToken, generateRefreshToken } from "./auth.token.js";
+import config from "../../config/config.js";
+import { createRefreshToken } from "./auth.repository.js";
 
 export const registerUser = async (
   name: string,
@@ -28,7 +32,7 @@ export const loginUser = async (email: string, password: string) => {
   const user = await getUserByEmail(email);
 
   if (!user) {
-    throw AppError.unauthorized ("Invalid credentials");
+    throw AppError.unauthorized("Invalid credentials");
   }
 
   const isPasswordMatch = await argon2.verify(user.password_hash, password);
@@ -37,9 +41,25 @@ export const loginUser = async (email: string, password: string) => {
     throw AppError.unauthorized("Invalid credentials");
   }
 
+  const accessToken = generateAccessToken(user.id);
+  const refreshToken = generateRefreshToken(user.id);
+
+  const expiresAt = new Date(
+    Date.now() + ms(config.auth.refreshTokenExpiresIn),
+  );
+
+  await createRefreshToken(user.id, refreshToken, expiresAt);
+
   return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    },
+
+    tokens: {
+      accessToken,
+      refreshToken,
+    },
   };
 };
