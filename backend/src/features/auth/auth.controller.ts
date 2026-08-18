@@ -1,6 +1,11 @@
 import type { Request, Response } from "express";
 import { asyncHandler } from "../../shared/utils/asyncHandler.js";
-import { loginUser, refreshAccessToken, registerUser } from "./auth.service.js";
+import {
+  currentUser,
+  loginUser,
+  refreshAccessToken,
+  registerUser,
+} from "./auth.service.js";
 import { AppError } from "../../shared/errors/AppError.js";
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
@@ -37,5 +42,20 @@ export const refresh = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     data: tokens,
+  });
+});
+
+export const getMe = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw AppError.notFound("Authentication required");
+  }
+
+  const user = await currentUser(userId);
+
+  res.status(200).json({
+    success: true,
+    data: user,
   });
 });

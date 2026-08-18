@@ -2,7 +2,11 @@ import argon2 from "argon2";
 import ms from "ms";
 import config from "../../config/config.js";
 import { AppError } from "../../shared/errors/AppError.js";
-import { createNewUser, getUserByEmail } from "../users/user.service.js";
+import {
+  createNewUser,
+  getUserByEmail,
+  getUserById,
+} from "../users/user.service.js";
 import { hashRefreshToken } from "./auth.crypto.js";
 import {
   generateAccessToken,
@@ -125,5 +129,21 @@ export const refreshAccessToken = async (refreshToken: string) => {
   return {
     accessToken,
     refreshToken: newRefreshToken,
+  };
+};
+
+export const currentUser = async (id: string) => {
+  const user = await getUserById(id);
+
+  if (!user) {
+    throw AppError.notFound("User not found");
+  }
+
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    created_at: user.created_at,
+    updated_at: user.updated_at,
   };
 };

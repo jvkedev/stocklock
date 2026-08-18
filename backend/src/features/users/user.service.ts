@@ -1,7 +1,15 @@
-import { createUser, findUserByEmail } from "./user.repository.js";
+import {
+  createUser,
+  findUserByEmail,
+  findUserById,
+} from "./user.repository.js";
 
 export const getUserByEmail = async (email: string) => {
   return await findUserByEmail(email);
+};
+
+export const getUserById = async (id: string) => {
+  return await findUserById(id);
 };
 
 export const createNewUser = async (
