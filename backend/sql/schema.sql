@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
 
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 
+    jti TEXT NOT NULL UNIQUE,
+
     token_hash TEXT NOT NULL,
 
     expires_at TIMESTAMPTZ NOT NULL,
