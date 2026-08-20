@@ -22,26 +22,45 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  const user = await loginUser(email, password);
+  const result = await loginUser(email, password);
+
+  res.cookie("refreshToken", result.tokens.refreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
 
   res.status(200).json({
     success: true,
-    data: user,
+    data: {
+      user: result.user,
+      accessToken: result.tokens.accessToken,
+    },
   });
 });
 
 export const refresh = asyncHandler(async (req: Request, res: Response) => {
-  const { refreshToken } = req.body;
+  const refreshToken = req.cookies?.refreshToken;
 
   if (!refreshToken) {
     throw AppError.unauthorized("Refresh token is required");
   }
 
-  const tokens = await refreshAccessToken(refreshToken);
+  const result = await refreshAccessToken(refreshToken);
+
+  res.cookie("refreshToken", result.refreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
 
   res.status(200).json({
     success: true,
-    data: tokens,
+    data: {
+      accessToken: result.accessToken,
+    },
   });
 });
 

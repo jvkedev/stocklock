@@ -3,8 +3,15 @@ import RegisterPage from "../pages/RegisterPage";
 import Layout from "./layout/Layout";
 import LoginPage from "../pages/LoginPage";
 import HomePage from "../pages/HomePage";
+import { useRestoreSession } from "../features/auth/hooks/useRestoreSession";
 
 const App = () => {
+  const { isRestoring } = useRestoreSession();
+
+  if (isRestoring) {
+    return null;
+  }
+
   return (
     <Routes>
       <Route element={<Layout />}>
