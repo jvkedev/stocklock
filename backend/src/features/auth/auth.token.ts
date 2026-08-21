@@ -21,7 +21,7 @@ export const generateAccessToken = (userId: string) => {
 
 export const generateRefreshToken = (userId: string) => {
   const jti = randomUUID();
-  return jwt.sign(
+  const token = jwt.sign(
     {
       sub: userId,
       jti,
@@ -31,6 +31,8 @@ export const generateRefreshToken = (userId: string) => {
       expiresIn: config.auth.refreshTokenExpiresIn,
     },
   );
+
+  return { token, jti };
 };
 
 export const verifyAccessToken = (token: string): TokenPayload => {

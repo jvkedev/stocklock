@@ -55,8 +55,7 @@ export const loginUser = async (email: string, password: string) => {
   }
 
   const accessToken = generateAccessToken(user.id);
-  const refreshToken = generateRefreshToken(user.id);
-  const decodedRefreshToken = verifyRefreshToken(refreshToken);
+  const { token: refreshToken, jti } = generateRefreshToken(user.id);
 
   const tokenHash = hashRefreshToken(refreshToken);
 
@@ -64,12 +63,7 @@ export const loginUser = async (email: string, password: string) => {
     Date.now() + ms(config.auth.refreshTokenExpiresIn),
   );
 
-  await createRefreshToken(
-    user.id,
-    tokenHash,
-    decodedRefreshToken.jti,
-    expiresAt,
-  );
+  await createRefreshToken(user.id, tokenHash, jti, expiresAt);
 
   return {
     user: {
@@ -111,8 +105,10 @@ export const refreshAccessToken = async (refreshToken: string) => {
   await revokeRefreshToken(decoded.jti);
 
   const accessToken = generateAccessToken(decoded.sub);
-  const newRefreshToken = generateRefreshToken(decoded.sub);
-  const newDecoded = verifyRefreshToken(newRefreshToken);
+
+  const { token: newRefreshToken, jti: newJti } = generateRefreshToken(
+    decoded.sub,
+  );
 
   const newTokenHash = hashRefreshToken(newRefreshToken);
   const newExpiresAt = new Date(
@@ -122,7 +118,7 @@ export const refreshAccessToken = async (refreshToken: string) => {
   await createRefreshToken(
     decoded.sub,
     newTokenHash,
-    newDecoded.jti,
+    newJti,
     newExpiresAt,
   );
 
