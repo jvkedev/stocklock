@@ -1,10 +1,20 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../features/auth/store/auth.store";
+import { useLogout } from "../../features/auth/hooks/useLogout";
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
-  const clearSession = useAuthStore((s) => s.clearSession);
+  const { mutate: logout, isPending } = useLogout();
+
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: () => {
+        navigate("/login");
+      },
+    });
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/70 backdrop-blur-md">
@@ -24,10 +34,11 @@ const Navbar = () => {
             </span>
 
             <button
-              onClick={clearSession}
-              className="rounded-lg bg-red-500/10 px-3.5 py-1.5 text-xs font-semibold text-red-400 border border-red-500/20 transition-all hover:bg-red-500 hover:text-white hover:border-transparent active:scale-95"
+              onClick={handleLogout}
+              disabled={isPending}
+              className="rounded-lg px-4 py-2 cursor-pointer text-sm font-semibold text-white shadow-sm transition-all active:scale-95 bg-red-600 hover:bg-red-700 "
             >
-              Logout
+              {isPending ? "Logging out" : "Logout"}
             </button>
           </div>
         ) : (
