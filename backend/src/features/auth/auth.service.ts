@@ -115,12 +115,7 @@ export const refreshAccessToken = async (refreshToken: string) => {
     Date.now() + ms(config.auth.refreshTokenExpiresIn),
   );
 
-  await createRefreshToken(
-    decoded.sub,
-    newTokenHash,
-    newJti,
-    newExpiresAt,
-  );
+  await createRefreshToken(decoded.sub, newTokenHash, newJti, newExpiresAt);
 
   return {
     accessToken,
@@ -142,4 +137,15 @@ export const currentUser = async (id: string) => {
     created_at: user.created_at,
     updated_at: user.updated_at,
   };
+};
+
+export const logoutUser = async (refreshToken: string | undefined) => {
+  if (!refreshToken) {
+    return;
+  }
+
+  try {
+    const decoded = verifyRefreshToken(refreshToken);
+    await revokeRefreshToken(decoded.jti);
+  } catch {}
 };

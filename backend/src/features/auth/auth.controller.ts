@@ -3,10 +3,12 @@ import { asyncHandler } from "../../shared/utils/asyncHandler.js";
 import {
   currentUser,
   loginUser,
+  logoutUser,
   refreshAccessToken,
   registerUser,
 } from "./auth.service.js";
 import { AppError } from "../../shared/errors/AppError.js";
+import { success } from "zod";
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -76,5 +78,24 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     data: user,
+  });
+});
+
+export const logout = asyncHandler(async (req: Request, res: Response) => {
+  const refreshToken = req.cookies?.refreshToken;
+
+  await logoutUser(refreshToken);
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+  });
+
+  res.status(200).json({
+    success: true,
+    data: {
+      message: "Logged out successfully",
+    },
   });
 });
