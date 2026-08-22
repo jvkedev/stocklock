@@ -4,6 +4,7 @@ import Layout from "./layout/Layout";
 import LoginPage from "../pages/LoginPage";
 import HomePage from "../pages/HomePage";
 import { useRestoreSession } from "../features/auth/hooks/useRestoreSession";
+import ProtectedRoute from "./layout/ProtectedRoutes";
 
 const App = () => {
   const { isRestoring } = useRestoreSession();
@@ -18,8 +19,9 @@ const App = () => {
         {/* Core Auth Pages */}
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-
         <Route path="/" element={<HomePage />} />
+
+        <Route element={<ProtectedRoute />}></Route>
 
         {/* 404 Catch-All Route */}
         <Route
