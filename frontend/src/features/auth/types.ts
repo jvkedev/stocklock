@@ -24,3 +24,7 @@ export interface RegisterPayload {
   email: string;
   password: string;
 }
+
+export interface updateProfilePayload {
+  name: string;
+}

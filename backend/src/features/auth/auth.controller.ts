@@ -8,7 +8,7 @@ import {
   registerUser,
 } from "./auth.service.js";
 import { AppError } from "../../shared/errors/AppError.js";
-import { success } from "zod";
+import { updateUserProfile } from "../users/user.service.js";
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -70,7 +70,7 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
   const userId = req.user?.id;
 
   if (!userId) {
-    throw AppError.notFound("Authentication required");
+    throw AppError.unauthorized("Authentication required");
   }
 
   const user = await currentUser(userId);
@@ -97,5 +97,22 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
     data: {
       message: "Logged out successfully",
     },
+  });
+});
+
+export const updateMe = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw AppError.unauthorized("Authorization required");
+  }
+
+  const { name } = req.body;
+
+  const user = await updateUserProfile(userId, name);
+
+  res.status(200).json({
+    success: true,
+    data: user,
   });
 });

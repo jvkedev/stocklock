@@ -1,10 +1,12 @@
 import { Route, Routes } from "react-router-dom";
-import RegisterPage from "../pages/RegisterPage";
 import Layout from "./layout/Layout";
-import LoginPage from "../pages/LoginPage";
-import HomePage from "../pages/HomePage";
 import { useRestoreSession } from "../features/auth/hooks/useRestoreSession";
 import ProtectedRoute from "./layout/ProtectedRoutes";
+
+import RegisterPage from "../pages/RegisterPage";
+import LoginPage from "../pages/LoginPage";
+import HomePage from "../pages/HomePage";
+import ProfilePage from "../pages/ProfilePage";
 
 const App = () => {
   const { isRestoring } = useRestoreSession();
@@ -21,7 +23,9 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<HomePage />} />
 
-        <Route element={<ProtectedRoute />}></Route>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<ProfilePage />} />
+        </Route>
 
         {/* 404 Catch-All Route */}
         <Route

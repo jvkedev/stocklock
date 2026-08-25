@@ -36,3 +36,15 @@ export const createUser = async (
 
   return result.rows[0];
 };
+
+export const updateUserName = async (id: string, name: string) => {
+  const result = await db.query(
+    `UPDATE users
+    SET name = $1, updated_at = NOW()
+    where id = $2
+    RETURNING id, name, email, created_at, updated_at`,
+    [name, id],
+  );
+
+  return result.rows[0] ?? null;
+};
