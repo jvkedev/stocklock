@@ -7,6 +7,7 @@ import RegisterPage from "../pages/RegisterPage";
 import LoginPage from "../pages/LoginPage";
 import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
+import ChangePasswordPage from "../pages/ChangePasswordPage";
 
 const App = () => {
   const { isRestoring } = useRestoreSession();
@@ -25,6 +26,7 @@ const App = () => {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/change-password" element={<ChangePasswordPage />} />
         </Route>
 
         {/* 404 Catch-All Route */}

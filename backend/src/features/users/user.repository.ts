@@ -13,7 +13,7 @@ export const findUserByEmail = async (email: string) => {
 
 export const findUserById = async (id: string) => {
   const result = await db.query(
-    `SELECT id, name, email, created_at, updated_at 
+    `SELECT id, name, email, password_hash, created_at, updated_at 
     FROM users
     WHERE id = $1`,
     [id],
@@ -47,4 +47,13 @@ export const updateUserName = async (id: string, name: string) => {
   );
 
   return result.rows[0] ?? null;
+};
+
+export const updateUserPassword = async (id: string, passwordHash: string) => {
+  await db.query(
+    `UPDATE users
+    SET password_hash = $1, updated_at = NOW()
+    WHERE id = $2`,
+    [passwordHash, id],
+  );
 };
