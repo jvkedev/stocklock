@@ -1,7 +1,10 @@
 import express from "express";
 import cors from "cors";
-import authRoutes from "./features/auth/auth.routes.js";
 import cookieParser from "cookie-parser";
+
+import authRoutes from "./features/auth/auth.routes.js";
+import productRoutes from "./features/products/product.routes.js";
+import orderRoutes from "./features/orders/order.routes.js";
 
 const app = express();
 
@@ -15,5 +18,7 @@ app.use(
 );
 
 app.use("/auth", authRoutes);
+app.use("/products", productRoutes);
+app.use("/orders", orderRoutes);
 
 export default app;
