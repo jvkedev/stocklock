@@ -2,8 +2,7 @@
 // the atomic stock-decrement in order.service.ts prevents overselling.
 // Reset the target product's stock to 1 before running.
 
-const ACCESS_TOKEN =
-  "PASTE YOUR CURRENT ACCESS TOKEN";
+const ACCESS_TOKEN = "PASTE YOUR CURRENT ACCESS TOKEN";
 const PRODUCT_ID = "PASTE YOUR PRODUCT ID OF STOCK 1";
 
 const makeRequest = async (label) => {
@@ -28,4 +27,9 @@ const makeRequest = async (label) => {
   return { status: res.status, text };
 };
 
+// using all js starts both requests without waiting for A to finish before starting B.
 await Promise.all([makeRequest("Request A"), makeRequest("Request B")]);
+
+// To run it
+// cd backend
+// node scripts/race-test.mjs

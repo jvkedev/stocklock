@@ -10,21 +10,46 @@ export const apiClient = axios.create({
   withCredentials: true,
 });
 
+let refreshPromise: Promise<string> | null = null;
+
+const getRefreshedToken = () => {
+  if (!refreshPromise) {
+    refreshPromise = refreshRequest().finally(() => {
+      refreshPromise = null;
+    });
+  }
+  return refreshPromise;
+};
+
+apiClient.interceptors.request.use((config) => {
+  const accessToken = useAuthStore.getState().accessToken;
+
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  } else {
+    delete config.headers.Authorization;
+  }
+
+  return config;
+});
+
 apiClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
     const isRefreshCall = originalRequest?.url?.includes("/auth/refresh");
 
-    if (error.response?.status === 401 && !isRefreshCall) {
+    if (
+      error.response?.status === 401 &&
+      !isRefreshCall &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+
       try {
-        const newAccessToken = await refreshRequest();
+        const newAccessToken = await getRefreshedToken();
 
         useAuthStore.getState().setTokens(newAccessToken);
-
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
         return apiClient(originalRequest);

@@ -8,6 +8,8 @@ import LoginPage from "../pages/LoginPage";
 import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import ChangePasswordPage from "../pages/ChangePasswordPage";
+import ProductPage from "../pages/ProductPage";
+import CreateProductPage from "../pages/CreateProductPage";
 
 const App = () => {
   const { isRestoring } = useRestoreSession();
@@ -24,9 +26,12 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<HomePage />} />
 
+        <Route path="/products" element={<ProductPage />} />
+
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/change-password" element={<ChangePasswordPage />} />
+          <Route path="/products/new" element={<CreateProductPage />} />
         </Route>
 
         {/* 404 Catch-All Route */}
