@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../features/auth/store/auth.store";
 import { useLogout } from "../../features/auth/hooks/useLogout";
+import { toast } from "sonner";
 
 const Navbar = () => {
   const location = useLocation();
@@ -11,7 +12,11 @@ const Navbar = () => {
   const handleLogout = () => {
     logout(undefined, {
       onSuccess: () => {
+        toast.success("Logged out successfully!");
         navigate("/login");
+      },
+      onError: () => {
+        toast.error("Something went wrong. Please try again.");
       },
     });
   };

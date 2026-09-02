@@ -6,6 +6,7 @@ import {
 } from "../features/products/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateProduct } from "../features/orders/hooks/useCreateProduct";
+import { toast } from "sonner";
 
 const CreateProductPage = () => {
   const navigate = useNavigate();
@@ -17,12 +18,16 @@ const CreateProductPage = () => {
     resolver: zodResolver(createProductSchema),
   });
 
-  const { mutate, isPending, error } = useCreateProduct();
+  const { mutate, isPending } = useCreateProduct();
 
   const onSubmit = (values: createProductFormValues) => {
     mutate(values, {
       onSuccess: () => {
+        toast.success("Product created successfully!");
         navigate("/products");
+      },
+      onError: () => {
+        toast.error("Failed to create product. Please try again.");
       },
     });
   };
@@ -110,8 +115,6 @@ const CreateProductPage = () => {
             {errors.stock && <p>{errors.stock.message}</p>}
           </div>
         </div>
-
-        {error && <p>Failed to create product.</p>}
 
         <button
           type="submit"

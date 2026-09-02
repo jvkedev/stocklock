@@ -5,6 +5,8 @@ import {
 } from "../features/auth/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useChangePassword } from "../features/auth/hooks/useChangePassword";
+import { toast } from "sonner";
+import { getApiErrorMessage } from "../shared/api/error";
 
 const ChangePasswordPage = () => {
   const {
@@ -16,12 +18,16 @@ const ChangePasswordPage = () => {
     resolver: zodResolver(changePasswordSchema),
   });
 
-  const { mutate, isPending, error, isSuccess } = useChangePassword();
+  const { mutate, isPending } = useChangePassword();
 
   const onSubmit = (values: ChangePasswordFormValues) => {
     mutate(values, {
       onSuccess: () => {
+        toast.success("Password changed successfully!");
         reset();
+      },
+      onError: (error) => {
+        toast.error(getApiErrorMessage(error));
       },
     });
   };
@@ -73,11 +79,6 @@ const ChangePasswordPage = () => {
             {errors.newPassword && <p>{errors.newPassword.message}</p>}
           </div>
         </div>
-
-        {error && (
-          <p>Failed to change password. Check your current password.</p>
-        )}
-        {isSuccess && <p>Password changed successfully.</p>}
 
         <button
           type="submit"

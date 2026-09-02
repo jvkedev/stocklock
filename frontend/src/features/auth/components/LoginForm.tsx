@@ -3,10 +3,12 @@ import { useForm } from "react-hook-form";
 import { loginSchema, type LoginFormValues } from "../schema";
 import { useLogin } from "../hooks/useLogin";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { getApiErrorMessage } from "../../../shared/api/error";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  
+
   const {
     register,
     handleSubmit,
@@ -15,12 +17,16 @@ const LoginForm = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const { mutate, isPending, error } = useLogin();
+  const { mutate, isPending } = useLogin();
 
   const onSubmit = (values: LoginFormValues) => {
     mutate(values, {
       onSuccess: () => {
+        toast.success("Logged in successfully!");
         navigate("/");
+      },
+      onError: (error) => {
+        toast.error(getApiErrorMessage(error));
       },
     });
   };
@@ -81,8 +87,6 @@ const LoginForm = () => {
           Sign Up
         </Link>
       </div>
-
-      {error && <p>Login failed. Check your credentials.</p>}
 
       <button
         type="submit"

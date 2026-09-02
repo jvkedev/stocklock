@@ -6,10 +6,12 @@ import {
 } from "../features/auth/schema";
 import { useAuthStore } from "../features/auth/store/auth.store";
 import { useUpdateProfile } from "../features/auth/hooks/useUpdateProfile";
+import { toast } from "sonner";
+import { getApiErrorMessage } from "../shared/api/error";
 
 const ProfilePage = () => {
   const user = useAuthStore((s) => s.user);
-  const { mutate, isPending, error, isSuccess } = useUpdateProfile();
+  const { mutate, isPending } = useUpdateProfile();
 
   const {
     register,
@@ -21,7 +23,14 @@ const ProfilePage = () => {
   });
 
   const onSubmit = (values: UpdateProfileFormValues) => {
-    mutate(values);
+    mutate(values, {
+      onSuccess: () => {
+        toast.success("Profile updated successfully!");
+      },
+      onError: (error) => {
+        toast.error(getApiErrorMessage(error));
+      },
+    });
   };
 
   return (
@@ -34,7 +43,6 @@ const ProfilePage = () => {
           Update Profile
         </h2>
 
-        {/* <div className="flex flex-col gap-6"> */}
         {/* Name Field */}
         <div className="flex flex-col gap-2">
           <label
@@ -70,10 +78,6 @@ const ProfilePage = () => {
             className="bg-[#0e0e0e] border border-[#2D2D2D] text-white px-4 py-3 rounded-lg outline-none placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all cursor-not-allowed"
           />
         </div>
-        {/* </div> */}
-
-        {error && <p>Failed to update profile.</p>}
-        {isSuccess && <p>Profile updated.</p>}
 
         <button
           type="submit"

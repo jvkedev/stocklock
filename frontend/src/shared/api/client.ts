@@ -37,11 +37,15 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    const isRefreshCall = originalRequest?.url?.includes("/auth/refresh");
+
+    const isAuthEndpoint =
+      originalRequest?.url?.includes("/auth/refresh") ||
+      originalRequest?.url?.includes("/auth/login") ||
+      originalRequest?.url?.includes("/auth/register");
 
     if (
       error.response?.status === 401 &&
-      !isRefreshCall &&
+      !isAuthEndpoint &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;

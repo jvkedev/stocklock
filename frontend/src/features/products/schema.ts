@@ -12,11 +12,11 @@ export const createProductSchema = z.object({
     .optional(),
 
   // coerce converts the string input into a number
-  price: z.coerce.number().nonnegative("Price cannot be negative"),
+  price: z.coerce.number().positive("Price must be greater than 0"),
 
   stock: z.coerce
     .number()
     .int("Stock must be a whole number")
-    .nonnegative("Stock cannot be negative"),
+    .positive("Stock must be greater than 0"),
 });
 export type createProductFormValues = z.infer<typeof createProductSchema>;

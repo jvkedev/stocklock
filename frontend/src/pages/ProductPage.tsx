@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { usePlaceOrder } from "../features/orders/hooks/usePlaceOrder";
 import { useProducts } from "../features/products/hooks/useProducts";
+import { toast } from "sonner";
+import { getApiErrorMessage } from "../shared/api/error";
 
 const ProductPage = () => {
   const { data: products, isLoading, error } = useProducts();
@@ -18,10 +20,11 @@ const ProductPage = () => {
       {
         onSuccess: () => {
           setBuyingProductId(null);
+          toast.success("Order placed successfully!");
         },
-
-        onError: () => {
+        onError: (error) => {
           setBuyingProductId(null);
+          toast.error(getApiErrorMessage(error));
         },
       },
     );
@@ -32,7 +35,7 @@ const ProductPage = () => {
   }
 
   if (error) {
-    return <p>Failed to load products.</p>;
+    return <p>Failed to load products. Please try again.</p>;
   }
 
   if (!products || products.length === 0) {

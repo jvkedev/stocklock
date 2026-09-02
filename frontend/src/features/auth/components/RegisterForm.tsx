@@ -1,5 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+import { getApiErrorMessage } from "../../../shared/api/error";
 import { registerSchema, type RegisterFormValues } from "../schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRegister } from "../hooks/useRegister";
@@ -15,12 +18,16 @@ const RegisterForm = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  const { mutate, isPending, error } = useRegister();
+  const { mutate, isPending } = useRegister();
 
   const onSubmit = (values: RegisterFormValues) => {
     mutate(values, {
       onSuccess: () => {
+        toast.success("Account created successfully!");
         navigate("/login");
+      },
+      onError: (error) => {
+        toast.error(getApiErrorMessage(error));
       },
     });
   };
@@ -100,8 +107,6 @@ const RegisterForm = () => {
           Sign In
         </Link>
       </div>
-
-      {error && <p>Registeration failed. Try a different email.</p>}
 
       <button
         type="submit"
