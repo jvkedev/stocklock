@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./features/auth/auth.routes.js";
 import productRoutes from "./features/products/product.routes.js";
 import orderRoutes from "./features/orders/order.routes.js";
+import { errorHandler } from "./shared/middlewares/errorHandler.js";
 
 const app = express();
 
@@ -20,5 +21,7 @@ app.use(
 app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 app.use("/orders", orderRoutes);
+
+app.use(errorHandler);
 
 export default app;
