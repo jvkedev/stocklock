@@ -24,6 +24,7 @@ export const authenticate = async (
 
     req.user = {
       id: decoded.sub,
+      role: decoded.role,
     };
 
     next();

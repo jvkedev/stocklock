@@ -1,5 +1,6 @@
 import argon2 from "argon2";
 import ms from "ms";
+
 import config from "../../config/config.js";
 import { AppError } from "../../shared/errors/AppError.js";
 import {
@@ -54,8 +55,8 @@ export const loginUser = async (email: string, password: string) => {
     throw AppError.unauthorized("Invalid credentials");
   }
 
-  const accessToken = generateAccessToken(user.id);
-  const { token: refreshToken, jti } = generateRefreshToken(user.id);
+  const accessToken = generateAccessToken(user.id, user.role);
+  const { token: refreshToken, jti } = generateRefreshToken(user.id, user.role);
 
   const tokenHash = hashRefreshToken(refreshToken);
 
@@ -82,6 +83,10 @@ export const loginUser = async (email: string, password: string) => {
 export const refreshAccessToken = async (refreshToken: string) => {
   const decoded = verifyRefreshToken(refreshToken);
 
+  if (!decoded.jti) {
+    throw AppError.unauthorized("Invalid or expired refresh token");
+  }
+
   const storedToken = await getRefreshTokenByJti(decoded.jti);
 
   if (!storedToken) {
@@ -104,10 +109,11 @@ export const refreshAccessToken = async (refreshToken: string) => {
 
   await revokeRefreshToken(decoded.jti);
 
-  const accessToken = generateAccessToken(decoded.sub);
+  const accessToken = generateAccessToken(decoded.sub, decoded.role);
 
   const { token: newRefreshToken, jti: newJti } = generateRefreshToken(
     decoded.sub,
+    decoded.role,
   );
 
   const newTokenHash = hashRefreshToken(newRefreshToken);
@@ -134,6 +140,7 @@ export const currentUser = async (id: string) => {
     id: user.id,
     name: user.name,
     email: user.email,
+    role: user.role,
     created_at: user.created_at,
     updated_at: user.updated_at,
   };
@@ -146,6 +153,8 @@ export const logoutUser = async (refreshToken: string | undefined) => {
 
   try {
     const decoded = verifyRefreshToken(refreshToken);
-    await revokeRefreshToken(decoded.jti);
+    if (decoded.jti) {
+      await revokeRefreshToken(decoded.jti);
+    }
   } catch {}
 };

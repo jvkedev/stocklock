@@ -11,6 +11,7 @@ import ProfilePage from "../pages/ProfilePage";
 import ChangePasswordPage from "../pages/ChangePasswordPage";
 import ProductPage from "../pages/ProductPage";
 import CreateProductPage from "../pages/CreateProductPage";
+import RequireRole from "./layout/RequireRole";
 
 const App = () => {
   const { isRestoring } = useRestoreSession();
@@ -34,6 +35,9 @@ const App = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/change-password" element={<ChangePasswordPage />} />
+          </Route>
+
+          <Route element={<RequireRole role="admin" />}>
             <Route path="/products/new" element={<CreateProductPage />} />
           </Route>
 

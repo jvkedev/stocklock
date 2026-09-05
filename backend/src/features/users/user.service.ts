@@ -35,6 +35,7 @@ export const updateUserProfile = async (id: string, name: string) => {
     id: updated.id,
     name: updated.name,
     email: updated.email,
+    role: updated.role,
     created_at: updated.created_at,
     updated_at: updated.updated_at,
   };

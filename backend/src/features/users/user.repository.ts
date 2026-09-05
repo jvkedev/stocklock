@@ -2,7 +2,7 @@ import { db } from "../../infrastructure/database/db.js";
 
 export const findUserByEmail = async (email: string) => {
   const result = await db.query(
-    `SELECT id, name, email, password_hash, created_at, updated_at
+    `SELECT id, name, email, password_hash, role, created_at, updated_at
     FROM users
     WHERE email = $1`,
     [email],
@@ -13,7 +13,7 @@ export const findUserByEmail = async (email: string) => {
 
 export const findUserById = async (id: string) => {
   const result = await db.query(
-    `SELECT id, name, email, password_hash, created_at, updated_at 
+    `SELECT id, name, email, password_hash, role, created_at, updated_at 
     FROM users
     WHERE id = $1`,
     [id],
@@ -42,7 +42,7 @@ export const updateUserName = async (id: string, name: string) => {
     `UPDATE users
     SET name = $1, updated_at = NOW()
     where id = $2
-    RETURNING id, name, email, created_at, updated_at`,
+    RETURNING id, name, email, role, created_at, updated_at`,
     [name, id],
   );
 

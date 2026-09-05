@@ -4,13 +4,15 @@ import { randomUUID } from "crypto";
 
 interface TokenPayload extends JwtPayload {
   sub: string;
-  jti: string;
+  role: string;
+  jti?: string;
 }
 
-export const generateAccessToken = (userId: string) => {
+export const generateAccessToken = (userId: string, role: string) => {
   return jwt.sign(
     {
       sub: userId,
+      role,
     },
     config.auth.accessTokenSecret,
     {
@@ -19,11 +21,12 @@ export const generateAccessToken = (userId: string) => {
   );
 };
 
-export const generateRefreshToken = (userId: string) => {
+export const generateRefreshToken = (userId: string, role: string) => {
   const jti = randomUUID();
   const token = jwt.sign(
     {
       sub: userId,
+      role,
       jti,
     },
     config.auth.refreshTokenSecret,
@@ -41,16 +44,13 @@ export const verifyAccessToken = (token: string): TokenPayload => {
   if (
     typeof decoded !== "object" ||
     decoded === null ||
-    typeof decoded.sub !== "string"
+    typeof decoded.sub !== "string" ||
+    typeof decoded.role !== "string"
   ) {
     throw new Error("Invalid access token payload");
   }
 
-  return {
-    ...decoded,
-    sub: decoded.sub,
-    jti: typeof decoded.jti === "string" ? decoded.jti : "",
-  };
+  return decoded as TokenPayload;
 };
 
 export const verifyRefreshToken = (token: string): TokenPayload => {
@@ -60,14 +60,11 @@ export const verifyRefreshToken = (token: string): TokenPayload => {
     typeof decoded !== "object" ||
     decoded === null ||
     typeof decoded.sub !== "string" ||
+    typeof decoded.role !== "string" ||
     typeof decoded.jti !== "string"
   ) {
     throw new Error("Invalid refresh token JwtPayload");
   }
 
-  return {
-    ...decoded,
-    sub: decoded.sub,
-    jti: decoded.jti,
-  };
+  return decoded as TokenPayload;
 };

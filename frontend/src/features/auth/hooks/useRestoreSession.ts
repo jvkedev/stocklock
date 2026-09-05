@@ -8,7 +8,7 @@ let restorePromise: Promise<void> | null = null;
 const restoreSession = async () => {
   try {
     const accessToken = await refreshRequest();
-    useAuthStore.getState().setTokens(accessToken);
+    useAuthStore.getState().setTokens(accessToken); // save token to zustand
     const user = await getMeRequest();
     useAuthStore.getState().setSession(user, accessToken);
   } catch {

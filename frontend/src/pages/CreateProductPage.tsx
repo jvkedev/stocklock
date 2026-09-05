@@ -7,6 +7,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateProduct } from "../features/orders/hooks/useCreateProduct";
 import { toast } from "sonner";
+import { getApiErrorMessage } from "../shared/api/error";
 
 const CreateProductPage = () => {
   const navigate = useNavigate();
@@ -26,8 +27,8 @@ const CreateProductPage = () => {
         toast.success("Product created successfully!");
         navigate("/products");
       },
-      onError: () => {
-        toast.error("Failed to create product. Please try again.");
+      onError: (error) => {
+        toast.error(getApiErrorMessage(error));
       },
     });
   };
