@@ -11,6 +11,9 @@ CREATE TABLE IF NOT EXISTS users (
 
     password_hash VARCHAR(128) NOT NULL,
 
+    role VARCHAR(20) NOT NULL DEFAULT 'user'
+        CHECK (role IN ('user', 'admin')),
+
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()

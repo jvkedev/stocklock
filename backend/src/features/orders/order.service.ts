@@ -1,5 +1,5 @@
 import { AppError } from "../../shared/errors/AppError.js";
-import { decrementStock } from "../products/product.repostory.js";
+import { decrementStock } from "../products/product.repository.js";
 import { getProductById } from "../products/product.service.js";
 import { createOrder } from "./order.repository.js";
 

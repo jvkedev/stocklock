@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createOrderHandler } from "./order.controlller.js";
+import { createOrderHandler } from "./order.controller.js";
 import { authenticate } from "../../shared/middlewares/auth.middleware.js";
 import { validate } from "../../shared/middlewares/validate.js";
 import { placeOrderSchema } from "./order.schema.js";

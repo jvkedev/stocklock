@@ -9,6 +9,7 @@ import {
 } from "./auth.service.js";
 import { AppError } from "../../shared/errors/AppError.js";
 import { updateUserProfile } from "../users/user.service.js";
+import config from "../../config/config.js";
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -28,7 +29,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
   res.cookie("refreshToken", result.tokens.refreshToken, {
     httpOnly: true,
-    secure: false,
+    secure: config.nodeEnv === "production",
     sameSite: "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
@@ -53,7 +54,7 @@ export const refresh = asyncHandler(async (req: Request, res: Response) => {
 
   res.cookie("refreshToken", result.refreshToken, {
     httpOnly: true,
-    secure: false,
+    secure: config.nodeEnv === "production",
     sameSite: "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
@@ -88,7 +89,7 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 
   res.clearCookie("refreshToken", {
     httpOnly: true,
-    secure: false,
+    secure: config.nodeEnv === "production",
     sameSite: "lax",
   });
 

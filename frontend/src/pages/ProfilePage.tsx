@@ -4,6 +4,7 @@ import {
   updateProfileSchema,
   type UpdateProfileFormValues,
 } from "../features/auth/schema";
+import type { updateProfilePayload } from "../features/auth/types";
 import { useAuthStore } from "../features/auth/store/auth.store";
 import { useUpdateProfile } from "../features/auth/hooks/useUpdateProfile";
 import { toast } from "sonner";
@@ -23,7 +24,7 @@ const ProfilePage = () => {
   });
 
   const onSubmit = (values: UpdateProfileFormValues) => {
-    mutate(values, {
+    mutate(values as updateProfilePayload, {
       onSuccess: () => {
         toast.success("Profile updated successfully!");
       },

@@ -3,14 +3,14 @@ import {
   createProduct,
   findAllProducts,
   findProductById,
-} from "./product.repostory.js";
+} from "./product.repository.js";
 
 export const listProducts = async () => {
   return await findAllProducts();
 };
 
 export const getProductById = async (id: string) => {
-  const product = findProductById(id);
+  const product = await findProductById(id);
 
   if (!product) {
     throw AppError.notFound("Product not found");

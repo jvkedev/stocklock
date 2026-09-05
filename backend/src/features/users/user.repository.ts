@@ -30,7 +30,7 @@ export const createUser = async (
   const result = await db.query(
     `INSERT INTO users (name, email, password_hash)
     VALUES ($1, $2, $3)
-    RETURNING id, name, email, password_hash, created_at, updated_at`,
+    RETURNING id, name, email, password_hash, role, created_at, updated_at`,
     [name, email, password_hash],
   );
 

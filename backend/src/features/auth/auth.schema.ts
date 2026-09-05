@@ -6,7 +6,9 @@ export const registerSchema = z.strictObject({
     .min(2, "Name must be at least 2 characters")
     .max(100, "Name must be at most 100 characters"),
 
-  email: z.email().max(255, "Email must be at most 255 characters"),
+  email: z
+    .email("Enter a valid email")
+    .max(255, "Email must be at most 255 characters"),
 
   password: z
     .string()
@@ -15,7 +17,9 @@ export const registerSchema = z.strictObject({
 });
 
 export const loginSchema = z.strictObject({
-  email: z.email().max(255, "Email must be at most 255 characters"),
+  email: z
+    .email("Enter a valid email")
+    .max(255, "Email must be at most 255 characters"),
 
   password: z
     .string()

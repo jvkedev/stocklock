@@ -28,7 +28,7 @@ const Navbar = () => {
           to="/"
           className="flex items-center gap-2 text-xl font-bold tracking-tight text-white transition-opacity hover:opacity-90"
         >
-          <span>Navbar</span>
+          <span>StockLock</span>
         </Link>
 
         {/* User / Auth Navigation */}
