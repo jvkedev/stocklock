@@ -2,7 +2,9 @@ import { Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
 import Layout from "./layout/Layout";
 import { useRestoreSession } from "../features/auth/hooks/useRestoreSession";
+
 import ProtectedRoute from "./layout/ProtectedRoutes";
+import RequireRole from "./layout/RequireRole";
 
 import RegisterPage from "../pages/RegisterPage";
 import LoginPage from "../pages/LoginPage";
@@ -11,7 +13,6 @@ import ProfilePage from "../pages/ProfilePage";
 import ChangePasswordPage from "../pages/ChangePasswordPage";
 import ProductPage from "../pages/ProductPage";
 import CreateProductPage from "../pages/CreateProductPage";
-import RequireRole from "./layout/RequireRole";
 
 const App = () => {
   const { isRestoring } = useRestoreSession();
@@ -32,11 +33,13 @@ const App = () => {
 
           <Route path="/products" element={<ProductPage />} />
 
+          {/* Protected Route */}
           <Route element={<ProtectedRoute />}>
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/change-password" element={<ChangePasswordPage />} />
           </Route>
 
+          {/* Required Role Route */}
           <Route element={<RequireRole role="admin" />}>
             <Route path="/products/new" element={<CreateProductPage />} />
           </Route>
