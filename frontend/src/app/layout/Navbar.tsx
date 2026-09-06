@@ -21,6 +21,13 @@ const Navbar = () => {
     });
   };
 
+  const navLinkClass = (path: string) =>
+    `text-sm font-medium transition-colors ${
+      location.pathname === path
+        ? "text-white font-semibold"
+        : "text-gray-400 hover:text-white"
+    }`;
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/70 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3.5 md:px-12">
@@ -34,6 +41,36 @@ const Navbar = () => {
         {/* User / Auth Navigation */}
         {user ? (
           <div className="flex items-center gap-5">
+            <Link to="/products" className={navLinkClass("/products")}>
+              Products
+            </Link>
+
+            {user.role === "admin" && (
+              <Link
+                to="/products/new"
+                className={navLinkClass("/products/new")}
+              >
+                Add Product
+              </Link>
+            )}
+
+            {user.role === "user" && (
+              <Link to="/orders/mine" className={navLinkClass("/orders/mine")}>
+                My Orders
+              </Link>
+            )}
+
+            <Link to="/profile" className={navLinkClass("/profile")}>
+              Profile
+            </Link>
+
+            <Link
+              to="change-password"
+              className={navLinkClass("/change-password")}
+            >
+              Change Password
+            </Link>
+
             <span className="text-sm font-medium text-gray-300">
               Hi, <span className="font-semibold text-white">{user.name}</span>
             </span>
