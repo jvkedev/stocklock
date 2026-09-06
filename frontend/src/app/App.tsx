@@ -13,6 +13,7 @@ import ProfilePage from "../pages/ProfilePage";
 import ChangePasswordPage from "../pages/ChangePasswordPage";
 import ProductPage from "../pages/ProductPage";
 import CreateProductPage from "../pages/CreateProductPage";
+import MyOrdersPage from "../pages/MyOrdersPage";
 
 const App = () => {
   const { isRestoring } = useRestoreSession();
@@ -37,6 +38,7 @@ const App = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/change-password" element={<ChangePasswordPage />} />
+            <Route path="/orders/mine" element={<MyOrdersPage />} />
           </Route>
 
           {/* Required Role Route */}

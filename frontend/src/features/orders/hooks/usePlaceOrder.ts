@@ -8,6 +8,7 @@ export const usePlaceOrder = () => {
     mutationFn: placeOrderRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["orders", "mine"] });
     },
   });
 };

@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { asyncHandler } from "../../shared/utils/asyncHandler.js";
 import { AppError } from "../../shared/errors/AppError.js";
-import { placeOrder } from "./order.service.js";
+import { getOrdersForUser, placeOrder } from "./order.service.js";
 
 export const createOrderHandler = asyncHandler(
   async (req: Request, res: Response) => {
@@ -21,3 +21,18 @@ export const createOrderHandler = asyncHandler(
     });
   },
 );
+
+export const getMyOrders = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw AppError.unauthorized("Authorization required");
+  }
+
+  const orders = await getOrdersForUser(userId);
+
+  res.status(200).json({
+    success: true,
+    data: orders,
+  });
+});

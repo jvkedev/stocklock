@@ -12,3 +12,13 @@ export interface PlaceOrderPayload {
   productId: string;
   quantity: number;
 }
+
+export interface MyOrder {
+  id: string;
+  quantity: number;
+  total_price: string;
+  status: string;
+  created_at: string;
+  product_id: string;
+  product_name: string;
+}

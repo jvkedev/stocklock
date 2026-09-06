@@ -1,7 +1,7 @@
 import { AppError } from "../../shared/errors/AppError.js";
 import { decrementStock } from "../products/product.repository.js";
 import { getProductById } from "../products/product.service.js";
-import { createOrder } from "./order.repository.js";
+import { createOrder, findOrdersByUserId } from "./order.repository.js";
 
 export const placeOrder = async (
   userId: string,
@@ -21,4 +21,8 @@ export const placeOrder = async (
   const order = await createOrder(userId, productId, quantity, totalPrice);
 
   return order;
+};
+
+export const getOrdersForUser = async (userId: string) => {
+  return await findOrdersByUserId(userId);
 };
