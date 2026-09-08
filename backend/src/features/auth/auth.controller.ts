@@ -30,7 +30,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   res.cookie("refreshToken", result.tokens.refreshToken, {
     httpOnly: true,
     secure: config.nodeEnv === "production",
-    sameSite: "lax",
+    sameSite: config.nodeEnv === "production" ? "none" as const : "lax" as const,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
@@ -55,7 +55,7 @@ export const refresh = asyncHandler(async (req: Request, res: Response) => {
   res.cookie("refreshToken", result.refreshToken, {
     httpOnly: true,
     secure: config.nodeEnv === "production",
-    sameSite: "lax",
+    sameSite: config.nodeEnv === "production" ? "none" as const : "lax" as const,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
@@ -90,7 +90,7 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
   res.clearCookie("refreshToken", {
     httpOnly: true,
     secure: config.nodeEnv === "production",
-    sameSite: "lax",
+    sameSite: config.nodeEnv === "production" ? "none" as const : "lax" as const,
   });
 
   res.status(200).json({
