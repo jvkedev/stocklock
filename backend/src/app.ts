@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import config from "./config/config.js";
 
 import authRoutes from "./features/auth/auth.routes.js";
 import productRoutes from "./features/products/product.routes.js";
@@ -13,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://stocklock-olive.vercel.app/",
+    origin: config.frontend_url,
     credentials: true,
   }),
 );

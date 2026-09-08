@@ -7,6 +7,8 @@ dotenv.config();
 const envSchema = z.object({
   PORT: z.coerce.number().default(3000),
 
+  FRONTEND_URL: z.string(),
+
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),
@@ -50,6 +52,8 @@ const env = parsedEnv();
 
 const config = {
   port: env.PORT,
+
+  frontend_url: env.FRONTEND_URL,
 
   nodeEnv: env.NODE_ENV,
   logLevel: env.LOG_LEVEL,
