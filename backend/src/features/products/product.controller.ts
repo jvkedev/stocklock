@@ -1,6 +1,11 @@
 import type { Request, Response } from "express";
 import { asyncHandler } from "../../shared/utils/asyncHandler.js";
-import { addProduct, getProductById, listProducts } from "./product.service.js";
+import {
+  addProduct,
+  getProductById,
+  listProducts,
+  updateProduct,
+} from "./product.service.js";
 import { AppError } from "../../shared/errors/AppError.js";
 
 export const createProduct = asyncHandler(
@@ -39,3 +44,20 @@ export const getProduct = asyncHandler(async (req: Request, res: Response) => {
     data: product,
   });
 });
+
+export const updateProductHandler = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    if (!id || Array.isArray(id)) {
+      throw AppError.notFound("Product id is required");
+    }
+
+    const product = await updateProduct(id, req.body);
+
+    res.status(200).json({
+      success: true,
+      data: product,
+    });
+  },
+);

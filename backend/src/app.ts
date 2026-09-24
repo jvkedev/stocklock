@@ -3,6 +3,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import config from "./config/config.js";
 
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./infrastructure/swagger/swagger.js";
+
 import authRoutes from "./features/auth/auth.routes.js";
 import productRoutes from "./features/products/product.routes.js";
 import orderRoutes from "./features/orders/order.routes.js";
@@ -22,6 +25,8 @@ app.use(
 app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 app.use("/orders", orderRoutes);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(errorHandler);
 

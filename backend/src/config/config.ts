@@ -50,10 +50,18 @@ const parsedEnv = () => {
 
 const env = parsedEnv();
 
+const normalizeFrontendOrigin = (value: string) => {
+  try {
+    return new URL(value).origin;
+  } catch {
+    return value.replace(/\/+$/, "");
+  }
+};
+
 const config = {
   port: env.PORT,
 
-  frontend_url: env.FRONTEND_URL,
+  frontend_url: normalizeFrontendOrigin(env.FRONTEND_URL),
 
   nodeEnv: env.NODE_ENV,
   logLevel: env.LOG_LEVEL,

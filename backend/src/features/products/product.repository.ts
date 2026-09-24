@@ -7,13 +7,6 @@ export interface UpdateProductFields {
   stock?: number;
 }
 
-const PRODUCT_COLUMN_MAP: Record<keyof UpdateProductFields, string> = {
-  name: "name",
-  description: "description",
-  price: "price",
-  stock: "stock",
-};
-
 export const createProduct = async (
   name: string,
   description: string | null,
@@ -67,34 +60,18 @@ export const updateProductById = async (
   productId: string,
   fields: UpdateProductFields,
 ) => {
-  const setClauses: string[] = [];
-  const values: unknown[] = [];
-  let paramIndex = 1;
-
-  for (const key of Object.keys(fields) as (keyof UpdateProductFields)[]) {
-    const value = fields[key];
-    const column = PRODUCT_COLUMN_MAP[key];
-
-    if (value !== undefined && column) {
-      setClauses.push(`${column} = ${paramIndex}`);
-      values.push(value);
-      paramIndex++;
-    }
-  }
-
-  if (setClauses.length === 0) {
-    return null;
-  }
-
-  setClauses.push(`updated_at = NOW()`);
-  values.push(productId);
-
   const result = await db.query(
     `UPDATE products
-    SET  ${setClauses.join(", ")}
-    WHERE id = $${paramIndex}
-    RETURNING id, name, description, price, stock, created_at, updated_at`,
-    values,
+  SET
+    name = COALESCE($1, name),
+    description = COALESCE($2, description),
+    price = COALESCE($3, price),
+    stock = COALESCE($4, stock),
+    updated_at = NOW()
+  WHERE id = $5
+  RETURNING id, name, description, price, stock, created_at, updated_at
+    `,
+    [fields.name, fields.description, fields.price, fields.stock, productId],
   );
 
   return result.rows[0] ?? null;
