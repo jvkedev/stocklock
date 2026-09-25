@@ -14,6 +14,7 @@ import ChangePasswordPage from "../pages/ChangePasswordPage";
 import ProductPage from "../pages/ProductPage";
 import CreateProductPage from "../pages/CreateProductPage";
 import MyOrdersPage from "../pages/MyOrdersPage";
+import UpdateProduct from "../pages/UpdateProduct";
 
 const App = () => {
   const { isRestoring } = useRestoreSession();
@@ -44,6 +45,7 @@ const App = () => {
           {/* Required Role Route */}
           <Route element={<RequireRole role="admin" />}>
             <Route path="/products/new" element={<CreateProductPage />} />
+            <Route path="/products/update" element={<UpdateProduct />} />
           </Route>
 
           {/* 404 Catch-All Route */}
