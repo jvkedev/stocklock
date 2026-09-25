@@ -65,7 +65,7 @@ const Navbar = () => {
             </Link>
 
             <Link
-              to="change-password"
+              to="/change-password"
               className={navLinkClass("/change-password")}
             >
               Change Password

@@ -5,7 +5,7 @@ import {
   type createProductFormValues,
 } from "../features/products/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateProduct } from "../features/orders/hooks/useCreateProduct";
+import { useCreateProduct } from "../features/products/hooks/useCreateProduct";
 import { toast } from "sonner";
 import { getApiErrorMessage } from "../shared/api/error";
 

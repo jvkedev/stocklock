@@ -1,6 +1,6 @@
 import { apiClient } from "../../../shared/api/client";
-import type { Product } from "../../products/types";
-import type { createProductFormValues } from "../../products/schema";
+import type { Product } from "../types";
+import type { createProductFormValues } from "../schema";
 
 export const createProductRequest = async (
   payload: createProductFormValues,
