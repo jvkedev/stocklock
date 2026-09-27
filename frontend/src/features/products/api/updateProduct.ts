@@ -1,10 +1,10 @@
 import { apiClient } from "../../../shared/api/client";
 import type { Product } from "../types";
-import type { updateProductFormValues } from "../schema";
+import type { UpdateProductFormValues } from "../schema";
 
 export const updateProductRequest = async (
   productId: string,
-  payload: updateProductFormValues,
+  payload: UpdateProductFormValues,
 ) => {
   const { data } = await apiClient.patch<{
     success: boolean;

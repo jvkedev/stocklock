@@ -45,7 +45,7 @@ const App = () => {
           {/* Required Role Route */}
           <Route element={<RequireRole role="admin" />}>
             <Route path="/products/new" element={<CreateProductPage />} />
-            <Route path="/products/update" element={<UpdateProduct />} />
+            <Route path="/products/:id/edit" element={<UpdateProduct />} />
           </Route>
 
           {/* 404 Catch-All Route */}

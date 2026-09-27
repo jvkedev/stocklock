@@ -1,13 +1,19 @@
 import { useState } from "react";
+import { Pencil } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { usePlaceOrder } from "../features/orders/hooks/usePlaceOrder";
 import { useProducts } from "../features/products/hooks/useProducts";
+import { useAuthStore } from "../features/auth/store/auth.store";
 import { toast } from "sonner";
 import { getApiErrorMessage } from "../shared/api/error";
 
 const ProductPage = () => {
+  const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
   const { data: products, isLoading, error } = useProducts();
   const { mutate: placeOrder, isPending } = usePlaceOrder();
   const [buyingProductId, setBuyingProductId] = useState<string | null>(null);
+  const isAdmin = user?.role === "admin";
 
   const handleBuy = (productId: string) => {
     setBuyingProductId(productId);
@@ -61,9 +67,22 @@ const ProductPage = () => {
               className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 flex flex-col justify-between hover:border-zinc-700 transition-colors shadow-lg"
             >
               <div>
-                <h2 className="text-lg font-semibold text-white mb-2 line-clamp-1">
-                  {product.name}
-                </h2>
+                <div className="mb-3 flex items-start justify-between gap-3">
+                  <h2 className="text-lg font-semibold text-white line-clamp-1">
+                    {product.name}
+                  </h2>
+
+                  {isAdmin && (
+                    <button
+                      type="button"
+                      aria-label={`Edit ${product.name}`}
+                      onClick={() => navigate(`/products/${product.id}/edit`)}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-800/80 text-zinc-200 transition-all hover:border-blue-500/60 hover:bg-blue-500/10 hover:text-blue-300"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
 
                 <p className="text-zinc-400 text-sm mb-4 line-clamp-2">
                   {product.description}
