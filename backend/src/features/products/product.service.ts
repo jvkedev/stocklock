@@ -2,6 +2,7 @@ import type { UpdateProductFields } from "./product.repository.js";
 import { AppError } from "../../shared/errors/AppError.js";
 import {
   createProduct,
+  deleteProductById,
   findAllProducts,
   findProductById,
   updateProductById,
@@ -41,4 +42,26 @@ export const updateProduct = async (
   }
 
   return updated;
+};
+
+export const removeProduct = async (id: string) => {
+  try {
+    const deleted = await deleteProductById(id);
+
+    if (!deleted) {
+      throw AppError.notFound("Product not found");
+    }
+
+    return deleted;
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      "code" in error &&
+      (error as { code: string }).code === "23503"
+    ) {
+      throw AppError.conflict(
+        "Cannot delete a product that has existing orders",
+      );
+    }
+  }
 };

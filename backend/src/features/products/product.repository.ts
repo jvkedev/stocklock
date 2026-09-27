@@ -76,3 +76,14 @@ export const updateProductById = async (
 
   return result.rows[0] ?? null;
 };
+
+export const deleteProductById = async (productId: string) => {
+  const result = await db.query(
+    `DELETE FROM products
+    WHERE id = $1
+    RETURNING id`,
+    [productId],
+  );
+
+  return result.rows[0] ?? null;
+};

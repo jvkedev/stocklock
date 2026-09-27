@@ -4,6 +4,7 @@ import {
   addProduct,
   getProductById,
   listProducts,
+  removeProduct,
   updateProduct,
 } from "./product.service.js";
 import { AppError } from "../../shared/errors/AppError.js";
@@ -58,6 +59,25 @@ export const updateProductHandler = asyncHandler(
     res.status(200).json({
       success: true,
       data: product,
+    });
+  },
+);
+
+export const deleteProductHandler = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    if (!id || Array.isArray(id)) {
+      throw AppError.notFound("Product id is requied");
+    }
+
+    await removeProduct(id);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        message: "Product deleted successfully",
+      },
     });
   },
 );
