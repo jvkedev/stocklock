@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { Pencil } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { usePlaceOrder } from "../features/orders/hooks/usePlaceOrder";
 import { useProducts } from "../features/products/hooks/useProducts";
 import { useAuthStore } from "../features/auth/store/auth.store";
 import { toast } from "sonner";
 import { getApiErrorMessage } from "../shared/api/error";
+import { useDeleteProduct } from "../features/products/hooks/useDeleteProduct";
 
 const ProductPage = () => {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const { data: products, isLoading, error } = useProducts();
+  const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
   const { mutate: placeOrder, isPending } = usePlaceOrder();
   const [buyingProductId, setBuyingProductId] = useState<string | null>(null);
   const isAdmin = user?.role === "admin";
@@ -34,6 +36,23 @@ const ProductPage = () => {
         },
       },
     );
+  };
+
+  const handleDelete = (productId: string, productName: string) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${productName}"? This cannot be undone`,
+    );
+
+    if (!confirmed) return;
+
+    deleteProduct(productId, {
+      onSuccess: () => {
+        toast.success("Product deleted successfully");
+      },
+      onError: (error) => {
+        toast.error(getApiErrorMessage(error));
+      },
+    });
   };
 
   if (isLoading) {
@@ -73,14 +92,26 @@ const ProductPage = () => {
                   </h2>
 
                   {isAdmin && (
-                    <button
-                      type="button"
-                      aria-label={`Edit ${product.name}`}
-                      onClick={() => navigate(`/products/${product.id}/edit`)}
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-800/80 text-zinc-200 transition-all hover:border-blue-500/60 hover:bg-blue-500/10 hover:text-blue-300"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        aria-label={`Edit ${product.name}`}
+                        onClick={() => navigate(`/products/${product.id}/edit`)}
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-800/80 text-zinc-200 transition-all hover:border-blue-500/60 hover:bg-blue-500/10 hover:text-blue-300"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </button>
+
+                      <button
+                        type="button"
+                        aria-label={`Delete ${product.name}`}
+                        onClick={() => handleDelete(product.id, product.name)}
+                        disabled={isDeleting}
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-red-500/30 bg-red-500/10 text-red-300 transition-all hover:border-red-400 hover:bg-red-500/15 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
                   )}
                 </div>
 
