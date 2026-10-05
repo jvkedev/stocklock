@@ -15,7 +15,7 @@ export const connectDB = async () => {
     await db.query(`SELECT 1`);
     logger.info("Connected to the database");
   } catch (error) {
-    logger.error({error}, "Failed to connect to the database");
+    logger.error({ err: error }, "Failed to connect to the database");
     process.exit(1);
   }
 };
