@@ -6,6 +6,7 @@ import config from "./config/config.js";
 import authRoutes from "./features/auth/auth.routes.js";
 import productRoutes from "./features/products/product.routes.js";
 import orderRoutes from "./features/orders/order.routes.js";
+import healthRoutes from "./features/health/health.routes.js";
 import { errorHandler } from "./shared/middlewares/errorHandler.js";
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(
 app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 app.use("/orders", orderRoutes);
+app.use("/health", healthRoutes);
 
 app.use(errorHandler);
 
